@@ -9,12 +9,20 @@ export class AppService {
     ip: string,
     name: string,
   ): Promise<IResponse> {
-    const ipAddress = ip || request?.ip || request?.socket?.remoteAddress;
+    const ipAddress = ip;
+    const requestIP = request?.ip;
+    const socketIP = request?.socket?.remoteAddress;
+    console.log({
+      ipAddress,
+      requestIP,
+      socketIP,
+    })
     try {
-      const res = await fetch(`https://ipapi.co/${ipAddress}/json/`);
+      const res = await fetch(`https://ipapi.co/${socketIP}/json/`);
       const value = await res.json();
+      console.log({ value });
       return {
-        client_ip: ipAddress, // The IP address of the requester
+        client_ip: socketIP, // The IP address of the requester
         location: value?.city, // The city of the requester
         greeting: `Hello, ${name}!, the temperature is 11 degrees Celcius in ${value?.city}`,
       };
