@@ -6,5 +6,5 @@ export interface IResponse {
   requestIP?: string;
   socketIP?: string | string[];
   clientIp?: string;
-  value: any;
+  value?: any;
 }

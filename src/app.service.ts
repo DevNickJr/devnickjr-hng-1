@@ -21,8 +21,9 @@ export class AppService {
     ip: string,
     name: string,
   ): Promise<IResponse> {
-    const clientIp = requestIp.getClientIp(request)
+    const clientIp = requestIp?.getClientIp(request);
     const ipAddress = ip;
+    const heaerdIp = request.headers;
     const requestIP = request?.ip;
     const socketIP = request?.socket?.remoteAddress?.split(':');
     console.log({
@@ -30,21 +31,23 @@ export class AppService {
       requestIP,
       socketIP,
       clientIp,
-    })
+      heaerdIp,
+    });
     const ipVal = socketIP[socketIP.length - 1];
     try {
-      const res = await fetch(`https://ipapi.co/${clientIp}/json/`);
+      const ipVal = socketIP[socketIP.length - 1];
+      const res = await fetch(`https://ipapi.co/${clientIp || heaerdIp || ipVal || requestIP}/json/`);
       const value = await res.json();
       console.log({ value });
       return {
         client_ip: ipVal, // The IP address of the requester
         location: value?.city, // The city of the requester
         greeting: `Hello, ${name}!, the temperature is 11 degrees Celcius in ${value?.city}`,
-        ipAddress,
-        requestIP,
-        socketIP,
-        clientIp,
-        value,
+        // ipAddress,
+        // requestIP,
+        // socketIP,
+        // clientIp,
+        // value,
       };
     } catch (error) {
       console.log({ error });
