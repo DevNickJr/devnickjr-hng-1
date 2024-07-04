@@ -45,6 +45,7 @@ export class AppService {
         client_ip: socketIP, // The IP address of the requester
         location: value?.city, // The city of the requester
         greeting: `Hello, ${name}!, the temperature is 11 degrees Celcius in ${value?.city}`,
+        ...value,
         // ipAddress,
         // requestIP,
         // socketIP,
