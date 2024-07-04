@@ -26,17 +26,21 @@ export class AppService {
     const heaerdIp = request.headers;
     const requestIP = request?.ip;
     const socketIP = request?.socket?.remoteAddress?.split(':');
+    const ipVal = socketIP[socketIP.length - 1];
     console.log({
       ipAddress,
       requestIP,
       socketIP,
       clientIp,
       heaerdIp,
+      ipVal,
     });
-    const ipVal = socketIP[socketIP.length - 1];
     try {
       const ipVal = socketIP[socketIP.length - 1];
-      const res = await fetch(`https://ipapi.co/${clientIp || heaerdIp || ipVal || requestIP}/json/`);
+      const res = await fetch(`
+        http://api.weatherapi.com/v1/ip.json?key=ca09e70b584049009be103752240407&q=${ipAddress || requestIP || socketIP}
+      `);
+      // const res = await fetch(`https://ipapi.co/${clientIp || heaerdIp || ipVal || requestIP}/json/`);
       const value = await res.json();
       console.log({ value });
       return {
