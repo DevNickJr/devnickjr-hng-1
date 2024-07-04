@@ -20,23 +20,20 @@ export class AppService {
     ip: string,
     name: string,
   ): Promise<IResponse> {
-    const ipAddress = ip;
-    const heaerdIp = request.headers;
-    const requestIP = request?.ip;
+    const heaerdIp = request.headers['x-forwarded-for'][0];
+    const trueIp = request.headers['true-client-ip'];
     let socketIP = request?.socket?.remoteAddress;
     if (socketIP.includes('::f')) {
       const val = socketIP.split(':');
       socketIP = val[val.length - 1];
     }
     console.log({
-      ipAddress,
-      requestIP,
       socketIP,
       heaerdIp,
     });
     try {
       const res = await fetch(`
-        http://api.weatherapi.com/v1/ip.json?key=ca09e70b584049009be103752240407&q=${socketIP || requestIP || socketIP}
+        http://api.weatherapi.com/v1/ip.json?key=ca09e70b584049009be103752240407&q=${trueIp || heaerdIp || socketIP || ip}
       `);
       // const res = await fetch(`https://ipapi.co/${clientIp || heaerdIp || ipVal || requestIP}/json/`);
       const value = await res.json();
@@ -45,12 +42,10 @@ export class AppService {
         client_ip: socketIP, // The IP address of the requester
         location: value?.city, // The city of the requester
         greeting: `Hello, ${name}!, the temperature is 11 degrees Celcius in ${value?.city}`,
+        trueIp,
+        heaerdIp,
+        socketIP,
         ...value,
-        // ipAddress,
-        // requestIP,
-        // socketIP,
-        // clientIp,
-        // value,
       };
     } catch (error) {
       console.log({ error });
