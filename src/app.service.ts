@@ -21,6 +21,9 @@ export class AppService {
     name: string,
   ): Promise<IResponse> {
     const headers = request.headers['x-forwarded-for'];
+    const trueIp =
+      typeof request.headers['true-client-ip'] === 'string' &&
+      request.headers['true-client-ip'];
     let socketIP = request?.socket?.remoteAddress;
     if (socketIP.includes('::f')) {
       const val = socketIP.split(':');
@@ -30,7 +33,7 @@ export class AppService {
     if (Array.isArray(typeof headers)) {
       headerIp = headers[0];
     }
-    const finalIp = headerIp || socketIP || ip;
+    const finalIp = trueIp || headerIp || socketIP || ip;
     try {
       const res = await fetch(`
         http://api.weatherapi.com/v1/current.json?key=ca09e70b584049009be103752240407&q=${finalIp}
