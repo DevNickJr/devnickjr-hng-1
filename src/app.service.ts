@@ -36,7 +36,7 @@ export class AppService {
     });
     try {
       const res = await fetch(`
-        http://api.weatherapi.com/v1/ip.json?key=ca09e70b584049009be103752240407&q=${finalIp || trueIp || socketIP || ip}
+        http://api.weatherapi.com/v1/current.json?key=ca09e70b584049009be103752240407&q=${finalIp || trueIp || socketIP || ip}
       `);
       // const res = await fetch(`https://ipapi.co/${clientIp || heaerdIp || ipVal || requestIP}/json/`);
       const value = await res.json();
